@@ -1,7 +1,6 @@
 import { createContext, ReactNode } from "react"
 import { useLocalStorage } from "../hooks/useLocalStorage"
-
-export const THEME_CONSTANTS = ["light", "dark", "system"] as const
+import { THEME_CONSTANTS } from "@/constants/ThemeProvider"
 
 export type Theme = (typeof THEME_CONSTANTS)[number]
 

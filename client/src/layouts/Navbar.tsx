@@ -8,7 +8,8 @@ import { Menu, Moon, Sun } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { useTheme } from "../hooks/useTheme"
-import { Theme, THEME_CONSTANTS } from "../contexts/ThemeProvider"
+import { Theme } from "../contexts/ThemeProvider"
+import { THEME_CONSTANTS } from "@/constants/ThemeProvider"
 
 const Navbar = () => {
   return (
