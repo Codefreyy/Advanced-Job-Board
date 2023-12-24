@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Moon, Sun } from "lucide-react"
+import { Menu, Moon, Sun } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { useTheme } from "../hooks/useTheme"
@@ -16,8 +16,33 @@ const Navbar = () => {
       <h2 className="text-lg">WDS App</h2>
       <section className="flex gap-4 items-center px-4 ">
         <ThemeToggleButton />
-        <NavItem label="Task Board" to="/tasks" />
-        <NavItem label="Job Listings" to="/jobs" />
+        <div className="hidden sm:flex">
+          <NavItem label="Task Board" to="/tasks" />
+          <NavItem label="Job Listings" to="/jobs" />
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="flex sm:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
+            >
+              <Menu className="w-4 h-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild>
+              <Link to="/tasks" className="cursor-pointer">
+                Task Board
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link to="/jobs" className="cursor-pointer">
+                Job Listing
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </section>
     </nav>
   )
