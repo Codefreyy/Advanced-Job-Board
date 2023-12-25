@@ -36,13 +36,16 @@ type SignupFormType = {
 const formSchema = signupSchema
   .merge(
     z.object({
-      passwordConfimation: z.string(),
+      passwordConfirmation: z.string(),
     })
   )
-  .refine((data) => data.password === data.passwordConfirmation, {
-    message: "Password do not match",
-    path: ["passwordConfirmation"],
-  })
+  .refine(
+    (data: SignupFormType) => data.password === data.passwordConfirmation,
+    {
+      message: "Password do not match",
+      path: ["passwordConfirmation"],
+    }
+  )
 
 export default function SignupForm() {
   const form = useForm<SignupValues>({
