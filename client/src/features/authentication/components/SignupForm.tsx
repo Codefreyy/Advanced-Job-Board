@@ -50,7 +50,9 @@ export default function SignupForm() {
     defaultValues: { email: "", password: "", passwordConfirmation: "" },
   })
 
-  function onSubmit(value: SignupValues) {}
+  function onSubmit(value: SignupValues) {
+    console.log(value)
+  }
 
   return (
     <Form {...form}>
