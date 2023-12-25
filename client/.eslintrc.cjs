@@ -20,7 +20,7 @@ module.exports = {
       "@typescript-eslint/parser": [".ts", ".tsx"],
     },
     "import/resolver": {
-      typescript: true,
+      typescript: {},
     },
   },
   rules: {

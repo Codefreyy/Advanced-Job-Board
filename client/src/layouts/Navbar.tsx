@@ -2,6 +2,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Menu, Moon, Sun } from "lucide-react"
@@ -10,6 +11,7 @@ import { Button } from "../components/ui/button"
 import { useTheme } from "../hooks/useTheme"
 import { Theme } from "../contexts/ThemeProvider"
 import { THEME_CONSTANTS } from "@/constants/ThemeProvider"
+import { useLoginInfo } from "@/hooks/useLoginInfo"
 
 const Navbar = () => {
   return (
@@ -42,10 +44,35 @@ const Navbar = () => {
                 Job Listing
               </Link>
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <ToggleLoginButton />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </section>
     </nav>
+  )
+}
+
+function ToggleLoginButton() {
+  const { loginInfo, setLoginInfo, logOut } = useLoginInfo()
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
+        >
+          Login
+          <span className="sr-only">Toggle Login Status</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>{JSON.stringify(loginInfo)}</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 
