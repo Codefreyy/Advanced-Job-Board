@@ -38,7 +38,7 @@ export const routes: RouteObject[] = [
                 ],
               },
               {
-                path: "signUp",
+                path: "signup",
                 children: [
                   {
                     index: true,

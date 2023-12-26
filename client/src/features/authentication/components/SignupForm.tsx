@@ -22,8 +22,8 @@ import {
 } from "@/components/ui/card"
 import { Link } from "react-router-dom"
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
-import { signup } from "../services/authentication"
 import { AxiosError } from "axios"
+import { useAuth } from "../hooks/useAuth"
 
 type SignupValues = z.infer<typeof formSchema>
 
@@ -53,6 +53,8 @@ export default function SignupForm() {
     defaultValues: { email: "", password: "", passwordConfirmation: "" },
   })
 
+  const { signup, user } = useAuth()
+
   async function onSubmit(values: SignupValues) {
     await signup(values.email, values.password).catch((error) => {
       if (
@@ -62,6 +64,8 @@ export default function SignupForm() {
         form.setError("root", { message: error.response?.data.message })
       }
     })
+
+    console.log("currentUser", user)
   }
 
   return (

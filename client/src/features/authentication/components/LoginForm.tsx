@@ -12,14 +12,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { loginSchema } from "@backend/constants/schemas/users"
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
+import { AxiosError } from "axios"
+import { useAuth } from "../hooks/useAuth"
+import { useNavigate } from "react-router-dom"
 
 type LoginValues = z.infer<typeof loginSchema>
-
-// type SignupFormType = {
-//   email: string
-//   password: string
-//   passwordConfirmation: string
-// }
 
 export default function LoginForm() {
   const form = useForm<LoginValues>({
@@ -27,8 +25,20 @@ export default function LoginForm() {
     defaultValues: {},
   })
 
-  function onSubmit() {
-    // to do
+  const { login, user } = useAuth()
+  const navigate = useNavigate()
+
+  async function onSubmit(values: LoginValues) {
+    await login(values.email, values.password).catch((error) => {
+      if (
+        error instanceof AxiosError &&
+        error.response?.data.message !== null
+      ) {
+        form.setError("root", { message: error.response?.data.message })
+      }
+    })
+
+    console.log("login", user)
   }
 
   return (
@@ -63,14 +73,22 @@ export default function LoginForm() {
           />
         </div>
         <div className="flex gap-2 justify-end">
-          <Button type="submit" variant="ghost">
+          <Button type="button" variant="ghost">
             Cancel
           </Button>
-          <Button type="submit" variant="outline">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/signUp")}
+          >
             Sign up
           </Button>
-          <Button type="submit" variant="secondary">
-            Login In
+          <Button
+            type="submit"
+            variant="secondary"
+            disabled={!form.formState.isValid || form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? <LoadingSpinner /> : "Login In"}
           </Button>
         </div>
       </form>

@@ -11,7 +11,6 @@ import { Button } from "../components/ui/button"
 import { useTheme } from "../hooks/useTheme"
 import { Theme } from "../contexts/ThemeProvider"
 import { THEME_CONSTANTS } from "@/constants/ThemeProvider"
-import { useLoginInfo } from "@/hooks/useLoginInfo"
 
 const Navbar = () => {
   return (
@@ -56,7 +55,6 @@ const Navbar = () => {
 }
 
 function ToggleLoginButton() {
-  const { loginInfo, setLoginInfo, logOut } = useLoginInfo()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -70,7 +68,7 @@ function ToggleLoginButton() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>{JSON.stringify(loginInfo)}</DropdownMenuItem>
+        {/* <DropdownMenuItem>{JSON.stringify(loginInfo)}</DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   )
