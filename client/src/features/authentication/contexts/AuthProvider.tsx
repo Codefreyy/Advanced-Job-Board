@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 type AuthContext = {
   login: (email: string, password: string) => Promise<void>
   signup: (email: string, password: string) => Promise<void>
-  logout: () => void
+  logout: () => Promise<void>
   //   isLoggedIn: boolean
   //   isLoadingUser: boolean
   user?: User
@@ -43,7 +43,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     })
   }
 
-  function logout() {}
+  function logout() {
+    return Promise.resolve()
+  }
 
   //   function signup() {}
 

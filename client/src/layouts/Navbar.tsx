@@ -11,8 +11,10 @@ import { Button } from "../components/ui/button"
 import { useTheme } from "../hooks/useTheme"
 import { Theme } from "../contexts/ThemeProvider"
 import { THEME_CONSTANTS } from "@/constants/ThemeProvider"
+import { useAuth } from "../features/authentication"
 
 const Navbar = () => {
+  const { logout, user } = useAuth()
   return (
     <nav className="sticky top-0 z-10 flex p-4 gap-3 justify-between items-center border-b border-slate-200 dark:bg-slate-950 bg-white ">
       <h2 className="text-lg">WDS App</h2>
@@ -21,6 +23,23 @@ const Navbar = () => {
         <div className="hidden sm:flex">
           <NavItem label="Task Board" to="/tasks" />
           <NavItem label="Job Listings" to="/jobs" />
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
+                >
+                  <span>{user.email}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={logout}>logout</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <NavItem label="login" to="/login" />
+          )}
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="flex sm:hidden">
@@ -45,7 +64,25 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <ToggleLoginButton />
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
+                    >
+                      <span>{user.email}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={logout}>logout</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link to="/login" className="cursor-pointer">
+                  Login
+                </Link>
+              )}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -54,25 +91,25 @@ const Navbar = () => {
   )
 }
 
-function ToggleLoginButton() {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
-        >
-          Login
-          <span className="sr-only">Toggle Login Status</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {/* <DropdownMenuItem>{JSON.stringify(loginInfo)}</DropdownMenuItem> */}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  )
-}
+// function ToggleLoginButton() {
+//   return (
+//     <DropdownMenu>
+//       <DropdownMenuTrigger asChild>
+//         <Button
+//           variant="ghost"
+//           size="sm"
+//           className="data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
+//         >
+//           Login
+//           <span className="sr-only">Toggle Login Status</span>
+//         </Button>
+//       </DropdownMenuTrigger>
+//       <DropdownMenuContent align="end">
+//         {/* <DropdownMenuItem>{JSON.stringify(loginInfo)}</DropdownMenuItem> */}
+//       </DropdownMenuContent>
+//     </DropdownMenu>
+//   )
+// }
 
 function ThemeToggleButton() {
   const { setTheme } = useTheme()
