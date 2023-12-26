@@ -68,26 +68,26 @@ const Navbar = () => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              {user ? (
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <span className="mr-auto">{user.email}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem onClick={logout}>
-                        <span className="cursor-pointer">logout</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
-              ) : (
+            {user ? (
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <span className="mr-auto">{user.email}</span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem onClick={logout}>
+                      <span className="cursor-pointer">logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+            ) : (
+              <DropdownMenuItem asChild>
                 <Link to="/login" className="cursor-pointer">
                   Login
                 </Link>
-              )}
-            </DropdownMenuItem>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </section>
