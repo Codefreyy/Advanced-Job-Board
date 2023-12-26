@@ -2,10 +2,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Menu, Moon, Sun } from "lucide-react"
+import { ChevronDown, Menu, Moon, Sun } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { useTheme } from "../hooks/useTheme"
@@ -31,6 +35,7 @@ const Navbar = () => {
                   className="data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
                 >
                   <span>{user.email}</span>
+                  <ChevronDown className="w-4 h-4 ml-2" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -38,7 +43,7 @@ const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <NavItem label="login" to="/login" />
+            <NavItem label="Login" to="/login" />
           )}
         </div>
         <DropdownMenu>
@@ -65,19 +70,18 @@ const Navbar = () => {
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
-                    >
-                      <span>{user.email}</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={logout}>logout</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <span className="mr-auto">{user.email}</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem onClick={logout}>
+                        <span className="cursor-pointer">logout</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
               ) : (
                 <Link to="/login" className="cursor-pointer">
                   Login
@@ -90,26 +94,6 @@ const Navbar = () => {
     </nav>
   )
 }
-
-// function ToggleLoginButton() {
-//   return (
-//     <DropdownMenu>
-//       <DropdownMenuTrigger asChild>
-//         <Button
-//           variant="ghost"
-//           size="sm"
-//           className="data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
-//         >
-//           Login
-//           <span className="sr-only">Toggle Login Status</span>
-//         </Button>
-//       </DropdownMenuTrigger>
-//       <DropdownMenuContent align="end">
-//         {/* <DropdownMenuItem>{JSON.stringify(loginInfo)}</DropdownMenuItem> */}
-//       </DropdownMenuContent>
-//     </DropdownMenu>
-//   )
-// }
 
 function ThemeToggleButton() {
   const { setTheme } = useTheme()

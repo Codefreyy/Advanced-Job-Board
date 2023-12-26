@@ -3,14 +3,16 @@ import { User } from "../constants/types"
 import {
   login as loginService,
   signup as signupService,
+  logout as logoutService,
 } from "../services/authentication"
 import { useLocation, useNavigate } from "react-router-dom"
+import LogoutDialog from "../components/LogoutDialog"
 
 type AuthContext = {
   login: (email: string, password: string) => Promise<void>
   signup: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
-  //   isLoggedIn: boolean
+  isLogin: boolean
   //   isLoadingUser: boolean
   user?: User
 }
@@ -23,14 +25,16 @@ type AuthProviderProps = {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>()
-  //   const [isLoadingUser, setIsLoadingUser] = useState()
-  //   const [isLoggin, setIsLoggin] = useState()
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+  // const [isLoadingUser, setIsLoadingUser] = useState()
+  const [isLogin, setIsLogin] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
 
   function login(email: string, password: string) {
     return loginService(email, password).then((user) => {
       setUser(user)
+      setIsLogin(true)
       navigate(location.state?.location ?? "/")
     })
   }
@@ -40,11 +44,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.log("user", user)
       setUser(user)
       navigate(location.state?.location ?? "/")
+      setIsLogin(true)
     })
   }
 
   function logout() {
-    return Promise.resolve()
+    setIsLogoutModalOpen(true)
+    return logoutService()
+      .then(() => {
+        setIsLogin(false)
+        setUser(undefined)
+      })
+      .finally(() => setIsLogoutModalOpen(false))
   }
 
   //   function signup() {}
@@ -55,12 +66,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
         login,
         logout,
         signup,
-        // isLoggedIn,
+        isLogin,
         // isLoadingUser,
         user,
       }}
     >
       {children}
+      <LogoutDialog
+        isOpen={isLogoutModalOpen}
+        onOpenChange={() => setIsLogoutModalOpen(!isLogoutModalOpen)}
+      ></LogoutDialog>
     </Context.Provider>
   )
 }
