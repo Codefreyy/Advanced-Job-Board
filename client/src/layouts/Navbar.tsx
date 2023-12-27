@@ -39,7 +39,9 @@ const Navbar = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={logout}>logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={logout}>
+                  <span className="cursor-pointer">Logout</span>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
@@ -76,7 +78,7 @@ const Navbar = () => {
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
                     <DropdownMenuItem onClick={logout}>
-                      <span className="cursor-pointer">logout</span>
+                      <span className="cursor-pointer">Logout</span>
                     </DropdownMenuItem>
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>

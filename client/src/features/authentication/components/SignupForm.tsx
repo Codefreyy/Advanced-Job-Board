@@ -53,7 +53,7 @@ export default function SignupForm() {
     defaultValues: { email: "", password: "", passwordConfirmation: "" },
   })
 
-  const { signup, user } = useAuth()
+  const { signup } = useAuth()
 
   async function onSubmit(values: SignupValues) {
     await signup(values.email, values.password).catch((error) => {
@@ -64,8 +64,6 @@ export default function SignupForm() {
         form.setError("root", { message: error.response?.data.message })
       }
     })
-
-    console.log("currentUser", user)
   }
 
   return (
