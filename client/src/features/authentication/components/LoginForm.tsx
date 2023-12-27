@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -12,10 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { loginSchema } from "@backend/constants/schemas/users"
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
-import { AxiosError } from "axios"
-import { useAuth } from "../hooks/useAuth"
-import { useNavigate } from "react-router-dom"
 import {
   Card,
   CardContent,
@@ -24,37 +19,39 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
+import { AxiosError } from "axios"
+import { useAuth } from "../hooks/useAuth"
 
 type LoginValues = z.infer<typeof loginSchema>
 
 export default function LoginForm() {
+  const { login } = useAuth()
+
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {},
+    defaultValues: { email: "", password: "" },
   })
-
-  const { login, user } = useAuth()
-  const navigate = useNavigate()
 
   async function onSubmit(values: LoginValues) {
     await login(values.email, values.password).catch((error) => {
       if (
         error instanceof AxiosError &&
-        error.response?.data.message !== null
+        error.response?.data?.message != null
       ) {
-        form.setError("root", { message: error.response?.data.message })
+        form.setError("root", { message: error.response.data.message })
       }
     })
-
-    console.log("login", user)
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className="w-[400px]">
           <CardHeader>
-            <CardTitle>Login</CardTitle>
+            <CardTitle>Log In</CardTitle>
             {form.formState.errors.root?.message && (
               <CardDescription className="text-red-500 dark:text-red-900">
                 {form.formState.errors.root.message}
@@ -69,7 +66,7 @@ export default function LoginForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input {...field} type="email" />
+                    <Input type="email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,7 +79,7 @@ export default function LoginForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" />
+                    <Input type="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -90,22 +87,17 @@ export default function LoginForm() {
             />
           </CardContent>
           <CardFooter className="flex gap-2 justify-end">
-            <Button type="button" variant="ghost">
-              Cancel
+            <Button type="button" asChild variant="ghost">
+              <Link to="/">Cancel</Link>
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => navigate("/signUp")}
-            >
-              Sign up
+            <Button type="button" asChild variant="outline">
+              <Link to="/signup">Signup</Link>
             </Button>
             <Button
               type="submit"
-              variant="secondary"
               disabled={!form.formState.isValid || form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <LoadingSpinner /> : "Login In"}
+              {form.formState.isSubmitting ? <LoadingSpinner /> : "Login"}
             </Button>
           </CardFooter>
         </Card>

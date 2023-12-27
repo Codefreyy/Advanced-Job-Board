@@ -16,9 +16,10 @@ import { useTheme } from "../hooks/useTheme"
 import { Theme } from "../contexts/ThemeProvider"
 import { THEME_CONSTANTS } from "@/constants/ThemeProvider"
 import { useAuth } from "../features/authentication"
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
 
 const Navbar = () => {
-  const { logout, user } = useAuth()
+  const { logout, user, isLoadingUser } = useAuth()
   return (
     <nav className="sticky top-0 z-10 flex p-4 gap-3 justify-between items-center border-b border-slate-200 dark:bg-slate-950 bg-white ">
       <h2 className="text-lg">WDS App</h2>
@@ -44,6 +45,8 @@ const Navbar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : isLoadingUser ? (
+            <LoadingSpinner className="mt-2" />
           ) : (
             <NavItem label="Login" to="/login" />
           )}

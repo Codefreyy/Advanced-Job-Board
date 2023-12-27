@@ -1,9 +1,10 @@
-import { createContext, ReactNode, useState } from "react"
+import { createContext, ReactNode, useEffect, useState } from "react"
 import { User } from "../constants/types"
 import {
   login as loginService,
   signup as signupService,
   logout as logoutService,
+  getLoggedUser,
 } from "../services/authentication"
 import { useLocation, useNavigate } from "react-router-dom"
 import LogoutDialog from "../components/LogoutDialog"
@@ -13,7 +14,7 @@ type AuthContext = {
   signup: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
   isLogin: boolean
-  //   isLoadingUser: boolean
+  isLoadingUser: boolean
   user?: User
 }
 
@@ -26,10 +27,17 @@ type AuthProviderProps = {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>()
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
-  // const [isLoadingUser, setIsLoadingUser] = useState()
+  const [isLoadingUser, setIsLoadingUser] = useState(false)
   const [isLogin, setIsLogin] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
+
+  useEffect(() => {
+    setIsLoadingUser(true)
+    getLoggedUser()
+      .then(setUser)
+      .finally(() => setIsLoadingUser(false))
+  }, [])
 
   function login(email: string, password: string) {
     return loginService(email, password).then((user) => {
@@ -41,7 +49,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   function signup(email: string, password: string) {
     return signupService(email, password).then((user) => {
-      console.log("user", user)
       setUser(user)
       navigate(location.state?.location ?? "/")
       setIsLogin(true)
@@ -58,8 +65,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       .finally(() => setIsLogoutModalOpen(false))
   }
 
-  //   function signup() {}
-
   return (
     <Context.Provider
       value={{
@@ -67,7 +72,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         logout,
         signup,
         isLogin,
-        // isLoadingUser,
+        isLoadingUser,
         user,
       }}
     >
