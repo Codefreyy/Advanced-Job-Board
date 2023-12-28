@@ -1,5 +1,5 @@
-import JobListingGrid from "./components/JobListingGrid";
+import MyJobListingGrid from "./components/MyJobListingGrid";
 import JobListingForm from './components/JobListingForm';
 import { createNewJobListing, getAllMyListings } from './services/jobs';
 
-export { JobListingGrid, JobListingForm, createNewJobListing, getAllMyListings }
+export { MyJobListingGrid, JobListingForm, createNewJobListing, getAllMyListings }

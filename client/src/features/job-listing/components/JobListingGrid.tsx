@@ -1,18 +1,19 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { cn } from "@/utils/shadcnUtils"
+import { ComponentProps } from "react"
 
-const JobListingGrid = () => {
+type JobListingGridProps = ComponentProps<"div">
+
+export default function JobListingGrid({
+  className,
+  ...props
+}: JobListingGridProps) {
   return (
-    <section className="grid grid-cols-3 gap-5 max-md:grid-cols-2 max-sm:grid-cols-1">
-      {Array.from({ length: 5 }).map((_, idx) => (
-        <Card className="w-100" key={idx}>
-          <CardHeader>
-            <CardTitle className="text-lg">Frontend Developer</CardTitle>
-            <CardContent></CardContent>
-          </CardHeader>
-        </Card>
-      ))}
-    </section>
+    <div
+      {...props}
+      className={cn(
+        "flex flex-col sm:grid gap-4 grid-cols-[repeat(auto-fill,minmax(400px,1fr))]",
+        className
+      )}
+    ></div>
   )
 }
-
-export default JobListingGrid
