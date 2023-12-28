@@ -27,7 +27,7 @@ const Navbar = () => {
         <ThemeToggleButton />
         <div className="hidden sm:flex">
           <NavItem label="Task Board" to="/tasks" />
-          <NavItem label="Job Listings" to="/jobs" />
+          <NavItem label="Job Listings" to="/jobs/my-listings" />
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -68,8 +68,8 @@ const Navbar = () => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link to="/jobs" className="cursor-pointer">
-                Job Listing
+              <Link to="/jobs/my-listings" className="cursor-pointer">
+                My Listings
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -137,11 +137,9 @@ type NavItemProps = {
 
 function NavItem({ to, label }: NavItemProps) {
   return (
-    <div>
-      <Button asChild variant="ghost">
-        <Link to={to}>{label}</Link>
-      </Button>
-    </div>
+    <Button asChild variant="ghost">
+      <Link to={to}>{label}</Link>
+    </Button>
   )
 }
 

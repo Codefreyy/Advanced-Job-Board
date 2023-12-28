@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -20,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
 import { AxiosError } from "axios"
@@ -27,41 +27,34 @@ import { useAuth } from "../hooks/useAuth"
 
 type SignupValues = z.infer<typeof formSchema>
 
-type SignupFormType = {
+type signupType = {
   email: string
   password: string
   passwordConfirmation: string
 }
 
 const formSchema = signupSchema
-  .merge(
-    z.object({
-      passwordConfirmation: z.string(),
-    })
-  )
-  .refine(
-    (data: SignupFormType) => data.password === data.passwordConfirmation,
-    {
-      message: "Password do not match",
-      path: ["passwordConfirmation"],
-    }
-  )
+  .merge(z.object({ passwordConfirmation: z.string() }))
+  .refine((data: signupType) => data.password === data.passwordConfirmation, {
+    message: "Passwords do not match",
+    path: ["passwordConfirmation"],
+  })
 
 export default function SignupForm() {
+  const { signup } = useAuth()
+
   const form = useForm<SignupValues>({
     resolver: zodResolver(formSchema),
     defaultValues: { email: "", password: "", passwordConfirmation: "" },
   })
 
-  const { signup } = useAuth()
-
   async function onSubmit(values: SignupValues) {
     await signup(values.email, values.password).catch((error) => {
       if (
         error instanceof AxiosError &&
-        error.response?.data.message !== null
+        error.response?.data?.message != null
       ) {
-        form.setError("root", { message: error.response?.data.message })
+        form.setError("root", { message: error.response.data.message })
       }
     })
   }
@@ -105,6 +98,7 @@ export default function SignupForm() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="passwordConfirmation"
@@ -114,7 +108,6 @@ export default function SignupForm() {
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -128,7 +121,7 @@ export default function SignupForm() {
             </Button>
             <Button
               type="submit"
-              disabled={!form.formState.isValid || form.formState.isSubmitting}
+              // disabled={!form.formState.isValid || form.formState.isSubmitting}
             >
               {form.formState.isSubmitting ? <LoadingSpinner /> : "Sign Up"}
             </Button>
