@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -61,9 +60,7 @@ const JobListingCard = ({
 
       <CardContent className="flex-grow">{job.description}</CardContent>
       <CardFooter className="flex justify-end gap-2 items-stretch">
-        {/* <Button variant="ghost">Delelte</Button>
-        <Button variant="outline">Edit</Button>
-        <Button type="submit">Publish</Button> */}
+        {footerBtns}
       </CardFooter>
     </Card>
   )

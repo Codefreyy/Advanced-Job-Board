@@ -6,6 +6,7 @@ import { z } from "zod";
  * GET /job-listings/my-listings
  * This route will return all the job listings for the currently logged in user (even if they are not published
  */
+
 export function getAllMyListings() {
     return baseApi.get('/job-listings/my-listings').then(res => z.array(jobListingFormSchema).parseAsync(res.data))
 }
@@ -24,4 +25,8 @@ export function getPublishedListings() {
  */
 export function createNewJobListing(data: z.infer<typeof jobListingFormSchema>) {
     return baseApi.post('/job-listings', data).then(res => jobListingFormSchema.parseAsync(res.data))
+}
+
+export function deleteListing(id: string) {
+    return baseApi.delete(`/job-listings/${id}`)
 }

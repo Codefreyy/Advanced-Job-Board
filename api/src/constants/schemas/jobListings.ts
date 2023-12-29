@@ -7,6 +7,7 @@ import {
 import { createUnionSchema } from "../../lib/zodCreateUnionSchema"
 
 export const jobListingFormSchema = z.object({
+  id: z.string().nonempty(),
   title: z.string().nonempty(),
   companyName: z.string().nonempty(),
   location: z.string().nonempty(),
