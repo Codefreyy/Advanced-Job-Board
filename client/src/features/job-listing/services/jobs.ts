@@ -28,5 +28,5 @@ export function createNewJobListing(data: z.infer<typeof jobListingFormSchema>) 
 }
 
 export function deleteListing(id: string) {
-    return baseApi.delete(`/job-listings/${id}`)
+    return baseApi.delete(`/job-listins/${id}`)
 }

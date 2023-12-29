@@ -15,6 +15,8 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { useToast } from "@/components/ui/use-toast"
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
 
 type MyJobListingGridProps = {
   jobListings: JobListing[]
@@ -22,25 +24,44 @@ type MyJobListingGridProps = {
 
 const MyJobListingGrid = ({ jobListings }: MyJobListingGridProps) => {
   const [deletedJobListingIds, setDeletedJobListingIds] = useState<string[]>([])
+  const [isDeleting, setIsDeleting] = useState(false)
+  const { toast } = useToast()
 
   const visibleJobListing = jobListings.filter(
     (jobListing) => !deletedJobListingIds.includes(jobListing.id)
   )
 
   async function deleteJobListing(deletedId: string) {
-    await deleteListing(deletedId)
-    setDeletedJobListingIds((ids) => [...ids, deletedId])
+    setIsDeleting(true)
+    try {
+      await deleteListing(deletedId)
+      setIsDeleting(false)
+      setDeletedJobListingIds((ids) => [...ids, deletedId])
+    } catch {
+      setIsDeleting(false)
+      toast({
+        title: "Error",
+        description: `This Job Listing is not deleted successfully`,
+      })
+    }
   }
   return (
-    <JobListingGrid>
-      {visibleJobListing.map((job) => (
-        <MyJobListingCard
-          jobListing={job}
-          key={job.id}
-          deleteJobListing={deleteJobListing}
-        />
-      ))}
-    </JobListingGrid>
+    <>
+      {isDeleting && (
+        <div className="flex gap-2 mb-2">
+          <LoadingSpinner /> <span className="text-slate-300">Deleting...</span>
+        </div>
+      )}
+      <JobListingGrid>
+        {visibleJobListing.map((job) => (
+          <MyJobListingCard
+            jobListing={job}
+            key={job.id}
+            deleteJobListing={deleteJobListing}
+          />
+        ))}
+      </JobListingGrid>
+    </>
   )
 }
 
