@@ -73,7 +73,7 @@ function MyJobListingCard({
 const DeleteJobListingDialog = ({
   deleteListing,
 }: {
-  deleteListing: (id: string) => void
+  deleteListing: () => void
 }) => {
   return (
     <AlertDialog>

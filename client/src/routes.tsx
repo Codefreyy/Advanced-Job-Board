@@ -6,7 +6,7 @@ import { TaskListPage } from "@/pages/tasks/TaskListPage"
 import { Navigate, RouteObject } from "react-router-dom"
 import { AuthLayout, LoginForm, SignupForm } from "./features/authentication"
 import { myJobListingsRoute } from "./pages/jobs/my-listings"
-import { NewJobListingPage } from "./pages/jobs/NewJobListingPage"
+import { NewJobListingPage } from "./pages/jobs/new/NewJobListingPage"
 
 export const routes: RouteObject[] = [
   {
