@@ -58,7 +58,7 @@ const JobListingCard = ({
         </div>
       </CardHeader>
 
-      <CardContent className="flex-grow">{job.description}</CardContent>
+      <CardContent className="flex-grow">{job.shortDescription}</CardContent>
       <CardFooter className="flex justify-end gap-2 items-stretch">
         {footerBtns}
       </CardFooter>

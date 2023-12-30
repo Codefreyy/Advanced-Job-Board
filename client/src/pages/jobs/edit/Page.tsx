@@ -6,10 +6,9 @@ import { Suspense } from "react"
 import { useNavigate } from "react-router-dom"
 import { loader } from "./loader"
 
-function DeleteJobListingPage() {
+function EditJobListingPage() {
   const navigate = useNavigate()
   const { jobListingsPromise, id } = useDeferredLoaderData<typeof loader>()
-
   return (
     <>
       <PageHeader>Edit Listing</PageHeader>
@@ -17,12 +16,10 @@ function DeleteJobListingPage() {
         <Await resolve={jobListingsPromise}>
           {(jobListings) => (
             <JobListingForm
-              initialJobListing={jobListings[0]}
+              initialJobListing={jobListings}
               onSubmit={async (jobListingValues) => {
-                if (id) {
-                  await editJobListing(id, jobListingValues)
-                  navigate("/jobs/my-listings")
-                }
+                await editJobListing(id, jobListingValues)
+                navigate("/jobs/my-listings")
               }}
             />
           )}
@@ -32,4 +29,4 @@ function DeleteJobListingPage() {
   )
 }
 
-export { DeleteJobListingPage }
+export { EditJobListingPage }

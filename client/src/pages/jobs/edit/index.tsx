@@ -1,6 +1,6 @@
-import { loader } from "../my-listings/loader"
-import { DeleteJobListingPage } from "./Page"
+import { EditJobListingPage } from "./Page"
+import { loader } from "./loader"
 export const editJobListingRoute = {
   loader,
-  element: <DeleteJobListingPage />,
+  element: <EditJobListingPage />,
 }
