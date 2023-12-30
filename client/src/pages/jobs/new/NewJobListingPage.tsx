@@ -9,7 +9,6 @@ export function NewJobListingPage() {
       <PageHeader>New Listing</PageHeader>
       <JobListingForm
         onSubmit={async (values) => {
-          console.log(1)
           await createNewJobListing(values)
           navigate("/jobs/my-listings")
         }}

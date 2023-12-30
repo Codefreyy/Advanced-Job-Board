@@ -4,7 +4,10 @@ import { Link } from "react-router-dom"
 import { loader } from "./loader"
 import { Await, useDeferredLoaderData } from "@/lib/reactRouter"
 import { Suspense } from "react"
-import { MyJobListingGrid } from "@/features/job-listing"
+import {
+  JobListingSkeletonGrid,
+  MyJobListingGrid,
+} from "@/features/job-listing"
 
 export function MyJobListingsPage() {
   const { jobListingsPromise } = useDeferredLoaderData<typeof loader>()
@@ -13,14 +16,14 @@ export function MyJobListingsPage() {
     <>
       <PageHeader
         btnSection={
-          <Button variant="outline" asChild>
+          <Button variant="outline" asChild className="whitespace-nowrap">
             <Link to="/jobs/new">Create Listing</Link>
           </Button>
         }
       >
         My Job Listings
       </PageHeader>
-      <Suspense fallback="loading...">
+      <Suspense fallback={<JobListingSkeletonGrid amount={6} />}>
         <Await resolve={jobListingsPromise}>
           {(jobListings) => <MyJobListingGrid jobListings={jobListings} />}
         </Await>

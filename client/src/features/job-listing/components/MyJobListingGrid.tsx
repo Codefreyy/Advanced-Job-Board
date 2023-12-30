@@ -37,11 +37,15 @@ const MyJobListingGrid = ({ jobListings }: MyJobListingGridProps) => {
       await deleteListing(deletedId)
       setIsDeleting(false)
       setDeletedJobListingIds((ids) => [...ids, deletedId])
+      toast({
+        title: "Success",
+        description: `This job listing is deleted successfully.`,
+      })
     } catch {
       setIsDeleting(false)
       toast({
         title: "Error",
-        description: `This Job Listing is not deleted successfully`,
+        description: `This Job Listing is not deleted successfully.`,
       })
     }
   }
