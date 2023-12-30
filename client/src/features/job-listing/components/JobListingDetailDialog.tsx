@@ -28,7 +28,7 @@ const JobListingDetailDialog = ({ job }: JobListingDetailDialogProps) => {
       <DialogTrigger asChild>
         <Button>View More</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[calc(100vh-2rem)] flex flex-col max-w-3xl w-[calc(100vw-2rem)]">
         {" "}
         <DialogHeader>
           <div className="flex gap-4 justify-between">
