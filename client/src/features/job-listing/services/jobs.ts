@@ -30,3 +30,19 @@ export function createNewJobListing(data: z.infer<typeof jobListingFormSchema>) 
 export function deleteListing(id: string) {
     return baseApi.delete(`/job-listings/${id}`)
 }
+
+export function getJobListing(id: string) {
+    return baseApi.get(`/job-listings/${id}`).then(
+        res => jobListingFormSchema.parseAsync(res.data)
+    )
+}
+
+/**
+ * @param id 
+ * PUT /job-listings/:id - This route will update the job listing with the given id. This will only work if the user is authenticated and the owner of the job listing. It will return the updated job listing.
+ */
+export function editJobListing(id: string, data: z.infer<typeof jobListingFormSchema>) {
+    return baseApi.put(`/job-listings/${id}`, data).then(
+        res => jobListingFormSchema.parseAsync(res.data)
+    )
+}

@@ -5,6 +5,7 @@ import { NewTaskPage } from "@/pages/tasks/NewTaskPage"
 import { TaskListPage } from "@/pages/tasks/TaskListPage"
 import { Navigate, RouteObject } from "react-router-dom"
 import { AuthLayout, LoginForm, SignupForm } from "./features/authentication"
+import { editJobListingRoute } from "./pages/jobs/edit"
 import { myJobListingsRoute } from "./pages/jobs/my-listings"
 import { NewJobListingPage } from "./pages/jobs/new/NewJobListingPage"
 
@@ -34,6 +35,10 @@ export const routes: RouteObject[] = [
               {
                 path: "new",
                 element: <NewJobListingPage />,
+              },
+              {
+                path: ":id/edit",
+                ...editJobListingRoute,
               },
             ],
           },
