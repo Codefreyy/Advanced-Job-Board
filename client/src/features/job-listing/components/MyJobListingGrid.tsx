@@ -17,6 +17,15 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/components/ui/use-toast"
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
+import { JOB_LISTING_DURATIONS } from "../../../../../api/src/constants/types"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { formatCurrency } from "@/utils/formatters"
+import { getJobListingPriceInCents } from "../../../../../api/src/utils/getJobListingPriceInCents"
 
 type MyJobListingGridProps = {
   jobListings: JobListing[]
@@ -89,6 +98,23 @@ function MyJobListingCard({
           <Button variant="outline">
             <Link to={`/jobs/${jobListing.id}/edit`}>Edit</Link>
           </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+              // className="-ml-3 h-8 data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
+              >
+                Extend
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {JOB_LISTING_DURATIONS.map((duration) => (
+                <DropdownMenuItem className="cursor-pointer">
+                  {duration} Days -{" "}
+                  {formatCurrency(getJobListingPriceInCents(duration) / 100)}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </>
       }
     />
