@@ -32,6 +32,8 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { formatDistanceStrict, isAfter } from "date-fns"
+import { Badge } from "@/components/ui/badge"
 
 type MyJobListingGridProps = {
   jobListings: JobListing[]
@@ -95,9 +97,22 @@ function MyJobListingCard({
 }: MyJobListingCardProps) {
   const [selectedDuration, setSelectedDuration] =
     useState<(typeof JOB_LISTING_DURATIONS)[number]>()
+  // const status = getJobListingStatus(jobListing.expiresAt)
+  const status = "Active"
+
   return (
     <JobListingCard
       job={jobListing}
+      headerDetails={
+        <div>
+          <Badge variant={getBadgeStyle(status)} className="rounded">
+            {status}
+            {status == "Active" &&
+              jobListing.expiresAt != null &&
+              getRemainingActiveDaysText(jobListing.expiresAt)}
+          </Badge>
+        </div>
+      }
       footerBtns={
         <>
           <DeleteJobListingDialog
@@ -111,7 +126,9 @@ function MyJobListingCard({
             onOpenChange={() => setSelectedDuration(undefined)}
           >
             <DialogContent>
-              <DialogTitle>{`Extend Job Listing: ${jobListing.title} for ${selectedDuration} days`}</DialogTitle>
+              <DialogTitle>{`${getJobListingButtonText(status)} Job Listing: ${
+                jobListing.title
+              } for ${selectedDuration} days`}</DialogTitle>
               <DialogDescription>
                 This is a non-refundable purchase.
               </DialogDescription>
@@ -119,7 +136,7 @@ function MyJobListingCard({
           </Dialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button>Extend</Button>
+              <Button>{getJobListingButtonText(status)}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {JOB_LISTING_DURATIONS.map((duration) => (
@@ -166,6 +183,45 @@ const DeleteJobListingDialog = ({
       </AlertDialogContent>
     </AlertDialog>
   )
+}
+
+function getJobListingStatus(expiresAt: Date | null) {
+  if (expiresAt == null) return "Draft"
+  if (isAfter(expiresAt, new Date())) {
+    return "Active"
+  } else {
+    return "Expired"
+  }
+}
+
+function getRemainingActiveDaysText(expiresAt: Date) {
+  return `${formatDistanceStrict(expiresAt, new Date(), {
+    unit: "day",
+  })} days left.`
+}
+
+function getBadgeStyle(status: ReturnType<typeof getJobListingStatus>) {
+  switch (status) {
+    case "Active":
+      return "default"
+    case "Draft":
+      return "secondary"
+    case "Expired":
+      return "destructive"
+  }
+}
+
+function getJobListingButtonText(
+  status: ReturnType<typeof getJobListingStatus>
+) {
+  switch (status) {
+    case "Active":
+      return "Extend"
+    case "Draft":
+      return "Publish"
+    case "Expired":
+      return "Republish"
+  }
 }
 
 export default MyJobListingGrid
