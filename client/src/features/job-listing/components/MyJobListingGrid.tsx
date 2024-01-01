@@ -26,6 +26,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { formatCurrency } from "@/utils/formatters"
 import { getJobListingPriceInCents } from "../../../../../api/src/utils/getJobListingPriceInCents"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 type MyJobListingGridProps = {
   jobListings: JobListing[]
@@ -87,6 +93,8 @@ function MyJobListingCard({
   jobListing,
   deleteJobListing,
 }: MyJobListingCardProps) {
+  const [selectedDuration, setSelectedDuration] =
+    useState<(typeof JOB_LISTING_DURATIONS)[number]>()
   return (
     <JobListingCard
       job={jobListing}
@@ -98,17 +106,27 @@ function MyJobListingCard({
           <Button variant="outline">
             <Link to={`/jobs/${jobListing.id}/edit`}>Edit</Link>
           </Button>
+          <Dialog
+            open={selectedDuration != null}
+            onOpenChange={() => setSelectedDuration(undefined)}
+          >
+            <DialogContent>
+              <DialogTitle>{`Extend Job Listing: ${jobListing.title} for ${selectedDuration} days`}</DialogTitle>
+              <DialogDescription>
+                This is a non-refundable purchase.
+              </DialogDescription>
+            </DialogContent>
+          </Dialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-              // className="-ml-3 h-8 data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
-              >
-                Extend
-              </Button>
+              <Button>Extend</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {JOB_LISTING_DURATIONS.map((duration) => (
-                <DropdownMenuItem className="cursor-pointer">
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => setSelectedDuration(duration)}
+                >
                   {duration} Days -{" "}
                   {formatCurrency(getJobListingPriceInCents(duration) / 100)}
                 </DropdownMenuItem>
