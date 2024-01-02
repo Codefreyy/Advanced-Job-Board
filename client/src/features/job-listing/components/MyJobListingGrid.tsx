@@ -3,7 +3,7 @@ import {
   deleteListing,
   createPublishPaymentIntent,
 } from "@/features/job-listing/services/jobs"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import { JobListing } from "../constants/types"
 import JobListingCard from "./JobListingCard"
@@ -35,7 +35,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { formatDistanceStrict, isAfter } from "date-fns"
+import { differenceInDays, formatDistanceStrict, isAfter } from "date-fns"
 import { Badge } from "@/components/ui/badge"
 import { Elements } from "@stripe/react-stripe-js"
 import { stripePromise } from "@/lib/stripe"
@@ -51,9 +51,11 @@ const MyJobListingGrid = ({ jobListings }: MyJobListingGridProps) => {
   const [isDeleting, setIsDeleting] = useState(false)
   const { toast } = useToast()
 
-  const visibleJobListing = jobListings.filter(
-    (jobListing) => !deletedJobListingIds.includes(jobListing.id)
-  )
+  const visibleJobListing = useMemo(() => {
+    return jobListings
+      .filter((jobListing) => !deletedJobListingIds.includes(jobListing.id))
+      .sort(sortJobListing)
+  }, [jobListings, deletedJobListingIds])
 
   async function deleteJobListing(deletedId: string) {
     setIsDeleting(true)
@@ -254,6 +256,18 @@ function getJobListingButtonText(
       return "Publish"
     case "Expired":
       return "Republish"
+  }
+}
+
+function sortJobListing(a: JobListing, b: JobListing) {
+  if (a.expiresAt == b.expiresAt) {
+    return 0
+  } else if (a.expiresAt == null) {
+    return -1
+  } else if (b.expiresAt == null) {
+    return 1
+  } else {
+    return differenceInDays(a.expiresAt, b.expiresAt)
   }
 }
 
