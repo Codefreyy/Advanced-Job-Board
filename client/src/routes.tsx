@@ -8,6 +8,7 @@ import { AuthLayout, LoginForm, SignupForm } from "./features/authentication"
 import { editJobListingRoute } from "./pages/jobs/edit"
 import { myJobListingsRoute } from "./pages/jobs/my-listings"
 import { NewJobListingPage } from "./pages/jobs/new/NewJobListingPage"
+import { orderCompleteRoute } from "./pages/jobs/order-complete"
 
 export const routes: RouteObject[] = [
   {
@@ -39,6 +40,10 @@ export const routes: RouteObject[] = [
               {
                 path: ":id/edit",
                 ...editJobListingRoute,
+              },
+              {
+                path: "order-complete",
+                ...orderCompleteRoute,
               },
             ],
           },

@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button"
-import { deleteListing } from "@/features/job-listing/services/jobs"
+import {
+  deleteListing,
+  createPublishPaymentIntent,
+} from "@/features/job-listing/services/jobs"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { JobListing } from "../constants/types"
@@ -34,6 +37,10 @@ import {
 } from "@/components/ui/dialog"
 import { formatDistanceStrict, isAfter } from "date-fns"
 import { Badge } from "@/components/ui/badge"
+import { Elements } from "@stripe/react-stripe-js"
+import { stripePromise } from "@/lib/stripe"
+import CheckoutForm from "./CheckoutForm"
+import { useTheme } from "../../../hooks/useTheme"
 
 type MyJobListingGridProps = {
   jobListings: JobListing[]
@@ -97,8 +104,9 @@ function MyJobListingCard({
 }: MyJobListingCardProps) {
   const [selectedDuration, setSelectedDuration] =
     useState<(typeof JOB_LISTING_DURATIONS)[number]>()
-  // const status = getJobListingStatus(jobListing.expiresAt)
   const status = "Active"
+  const [clientSecret, setClientSecret] = useState("")
+  const { isDark } = useTheme()
 
   return (
     <JobListingCard
@@ -123,7 +131,11 @@ function MyJobListingCard({
           </Button>
           <Dialog
             open={selectedDuration != null}
-            onOpenChange={() => setSelectedDuration(undefined)}
+            onOpenChange={(isOpen) => {
+              if (isOpen) return
+              setSelectedDuration(undefined)
+              setClientSecret("")
+            }}
           >
             <DialogContent>
               <DialogTitle>{`${getJobListingButtonText(status)} Job Listing: ${
@@ -132,6 +144,19 @@ function MyJobListingCard({
               <DialogDescription>
                 This is a non-refundable purchase.
               </DialogDescription>
+              {clientSecret && selectedDuration != null && (
+                <Elements
+                  options={{
+                    clientSecret,
+                    appearance: { theme: isDark ? "night" : "stripe" },
+                  }}
+                  stripe={stripePromise}
+                >
+                  <CheckoutForm
+                    amount={getJobListingPriceInCents(selectedDuration) / 100}
+                  />
+                </Elements>
+              )}
             </DialogContent>
           </Dialog>
           <DropdownMenu>
@@ -142,7 +167,15 @@ function MyJobListingCard({
               {JOB_LISTING_DURATIONS.map((duration) => (
                 <DropdownMenuItem
                   className="cursor-pointer"
-                  onClick={() => setSelectedDuration(duration)}
+                  onClick={async () => {
+                    setSelectedDuration(duration)
+                    const { clientSecret } = await createPublishPaymentIntent(
+                      jobListing.id,
+                      duration
+                    )
+
+                    setClientSecret(clientSecret)
+                  }}
                 >
                   {duration} Days -{" "}
                   {formatCurrency(getJobListingPriceInCents(duration) / 100)}
