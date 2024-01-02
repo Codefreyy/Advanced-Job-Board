@@ -1,54 +1,24 @@
-import { FormEvent, useEffect, useState } from "react"
-import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { Button } from "@/components/ui/button"
 import { formatCurrency } from "@/utils/formatters"
+import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
+import { FormEvent, useState } from "react"
 
-export default function CheckoutForm({ amount }: { amount: number }) {
+type JobListingCheckoutFormProps = {
+  amount: number
+}
+
+export function CheckoutForm({ amount }: JobListingCheckoutFormProps) {
   const stripe = useStripe()
   const elements = useElements()
-
-  const [message, setMessage] = useState<string>()
+  const [errorMessage, setErrorMessage] = useState<string>()
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    if (!stripe) {
-      return
-    }
-
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    )
-
-    if (!clientSecret) {
-      return
-    }
-
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      if (paymentIntent == undefined) return
-      switch (paymentIntent.status) {
-        case "succeeded":
-          setMessage("Payment succeeded!")
-          break
-        case "processing":
-          setMessage("Your payment is processing.")
-          break
-        case "requires_payment_method":
-          setMessage("Your payment was not successful, please try again.")
-          break
-        default:
-          setMessage("Something went wrong.")
-          break
-      }
-    })
-  }, [stripe])
-
-  const handleSubmit = async (e: FormEvent) => {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault()
 
-    if (!stripe || !elements) return
+    if (stripe == null || elements == null) return
 
     setIsLoading(true)
-
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
@@ -57,28 +27,28 @@ export default function CheckoutForm({ amount }: { amount: number }) {
     })
 
     if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message)
+      setErrorMessage(error.message)
     } else {
-      setMessage("An unexpected error occurred.")
+      setErrorMessage("An unexpected error occurred.")
     }
 
     setIsLoading(false)
   }
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" />
+    <form onSubmit={onSubmit}>
+      {errorMessage != null && (
+        <p className="text-red-500 dark:text-red-900 text-sm mb-4">
+          {errorMessage}
+        </p>
+      )}
+      <PaymentElement />
       <Button
-        className="mt-5 w-full"
-        disabled={isLoading || !stripe || !elements}
+        disabled={isLoading || stripe == null || elements == null}
+        className="mt-4 w-full"
       >
-        {isLoading ? (
-          <div className="spinner" id="spinner"></div>
-        ) : (
-          `Pay ${formatCurrency(amount)}`
-        )}
+        Pay {formatCurrency(amount)}
       </Button>
-      {message && <div id="payment-message">{message}</div>}
     </form>
   )
 }

@@ -27,7 +27,7 @@ type AuthProviderProps = {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>()
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
-  const [isLoadingUser, setIsLoadingUser] = useState(false)
+  const [isLoadingUser, setIsLoadingUser] = useState(true)
   const [isLogin, setIsLogin] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
@@ -50,8 +50,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   function signup(email: string, password: string) {
     return signupService(email, password).then((user) => {
       setUser(user)
-      navigate(location.state?.location ?? "/")
       setIsLogin(true)
+      navigate(location.state?.location ?? "/")
     })
   }
 

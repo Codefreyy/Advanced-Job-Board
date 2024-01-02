@@ -48,6 +48,14 @@ export function editJobListing(id: string, data: z.infer<typeof jobListingFormSc
     )
 }
 
-export function createPublishPaymentIntent(id: string, duration: typeof JOB_LISTING_DURATIONS[number]) {
-    return baseApi.post<{ clientSecret: string }>(`/job-listings/${id}/create-publish-payment-intent`, { duration }).then(res => res.data)
+export function createPublishPaymentIntent(
+    id: string,
+    duration: (typeof JOB_LISTING_DURATIONS)[number]
+) {
+    return baseApi
+        .post<{ clientSecret: string }>(
+            `/job-listings/${id}/create-publish-payment-intent`,
+            { duration }
+        )
+        .then(res => res.data)
 }

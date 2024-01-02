@@ -39,8 +39,8 @@ import { formatDistanceStrict, isAfter } from "date-fns"
 import { Badge } from "@/components/ui/badge"
 import { Elements } from "@stripe/react-stripe-js"
 import { stripePromise } from "@/lib/stripe"
-import CheckoutForm from "./CheckoutForm"
 import { useTheme } from "../../../hooks/useTheme"
+import { CheckoutForm } from "./CheckoutForm"
 
 type MyJobListingGridProps = {
   jobListings: JobListing[]
@@ -104,9 +104,10 @@ function MyJobListingCard({
 }: MyJobListingCardProps) {
   const [selectedDuration, setSelectedDuration] =
     useState<(typeof JOB_LISTING_DURATIONS)[number]>()
-  const status = "Active"
+  const status = getJobListingStatus(jobListing.expiresAt)
   const [clientSecret, setClientSecret] = useState("")
   const { isDark } = useTheme()
+  console.log("stat", status)
 
   return (
     <JobListingCard
@@ -117,7 +118,7 @@ function MyJobListingCard({
             {status}
             {status == "Active" &&
               jobListing.expiresAt != null &&
-              getRemainingActiveDaysText(jobListing.expiresAt)}
+              ` - ${getRemainingActiveDaysText(jobListing.expiresAt)}`}
           </Badge>
         </div>
       }
@@ -173,7 +174,6 @@ function MyJobListingCard({
                       jobListing.id,
                       duration
                     )
-
                     setClientSecret(clientSecret)
                   }}
                 >

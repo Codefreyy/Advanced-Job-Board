@@ -1,9 +1,9 @@
-import { loader } from "./loader"
 import { Await, useDeferredLoaderData } from "@/lib/reactRouter"
+import { loader } from "./loader"
 import { PageHeader } from "@/components/ui/PageHeader"
+import { Suspense } from "react"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
-import { Suspense } from "react"
 
 export function OrderCompletePage() {
   const { messagePromise } = useDeferredLoaderData<typeof loader>()
@@ -12,7 +12,7 @@ export function OrderCompletePage() {
     <div className="flex flex-col items-center">
       <PageHeader
         subtitle={
-          <Suspense fallback="Payment processing...">
+          <Suspense fallback="Your payment is processing">
             <Await resolve={messagePromise}>{(message) => message}</Await>
           </Suspense>
         }
@@ -20,7 +20,7 @@ export function OrderCompletePage() {
         Order Complete
       </PageHeader>
       <Button asChild>
-        <Link to="/jobs/my-listings">View your job listings</Link>
+        <Link to="/jobs/my-listings">View Your Job Listings</Link>
       </Button>
     </div>
   )

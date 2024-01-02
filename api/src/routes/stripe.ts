@@ -26,9 +26,8 @@ stripeRouter.post("/job-listing-order-complete", async (req, res) => {
     )
   } catch (e) {
     res.status(400).json({
-      message: `Webhook Error: ${
-        e instanceof Object && "message" in e && e.message
-      }`,
+      message: `Webhook Error: ${e instanceof Object && "message" in e && e.message
+        }`,
     })
     return
   }
@@ -54,6 +53,8 @@ stripeRouter.post("/job-listing-order-complete", async (req, res) => {
     res.status(400).json({ message: "Invalid job listing" })
     return
   }
+
+  console.log(jobListing.expiresAt)
 
   const startingDate =
     jobListing.expiresAt == null || isBefore(jobListing.expiresAt, new Date())
