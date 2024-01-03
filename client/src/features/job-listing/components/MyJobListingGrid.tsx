@@ -107,9 +107,8 @@ function MyJobListingCard({
   const [selectedDuration, setSelectedDuration] =
     useState<(typeof JOB_LISTING_DURATIONS)[number]>()
   const status = getJobListingStatus(jobListing.expiresAt)
-  const [clientSecret, setClientSecret] = useState("")
+  const [clientSecret, setClientSecret] = useState<string>()
   const { isDark } = useTheme()
-  console.log("stat", status)
 
   return (
     <JobListingCard
@@ -220,7 +219,8 @@ const DeleteJobListingDialog = ({
   )
 }
 
-function getJobListingStatus(expiresAt: Date | null) {
+function getJobListingStatus(expiresAt: Date | null): string {
+  console.log(expiresAt, "expire")
   if (expiresAt == null) return "Draft"
   if (isAfter(expiresAt, new Date())) {
     return "Active"

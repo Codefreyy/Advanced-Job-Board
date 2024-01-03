@@ -25,7 +25,10 @@ export function MyJobListingsPage() {
       </PageHeader>
       <Suspense fallback={<JobListingSkeletonGrid amount={6} />}>
         <Await resolve={jobListingsPromise}>
-          {(jobListings) => <MyJobListingGrid jobListings={jobListings} />}
+          {(jobListings) => {
+            console.log("jobListings", jobListings)
+            return <MyJobListingGrid jobListings={jobListings} />
+          }}
         </Await>
       </Suspense>
     </>

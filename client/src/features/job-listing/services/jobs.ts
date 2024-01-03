@@ -2,6 +2,7 @@ import { baseApi } from "@/services/baseApi";
 import { jobListingFormSchema } from '../../../../../api/src/constants/schemas/jobListings';
 import { z } from "zod";
 import { JOB_LISTING_DURATIONS } from '../../../../../api/src/constants/types';
+import { jobListingSchema } from "../constants/schema";
 
 /**
  * GET /job-listings/my-listings
@@ -9,7 +10,7 @@ import { JOB_LISTING_DURATIONS } from '../../../../../api/src/constants/types';
  */
 
 export function getAllMyListings() {
-    return baseApi.get('/job-listings/my-listings').then(res => z.array(jobListingFormSchema).parseAsync(res.data))
+    return baseApi.get('/job-listings/my-listings').then(res => z.array(jobListingSchema).parseAsync(res.data))
 }
 
 /**
