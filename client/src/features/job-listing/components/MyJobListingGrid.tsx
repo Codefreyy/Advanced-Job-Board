@@ -227,7 +227,6 @@ const DeleteJobListingDialog = ({
 }
 
 function getJobListingStatus(expiresAt: Date | null): string {
-  console.log(expiresAt, "expire")
   if (expiresAt == null) return "Draft"
   if (isAfter(expiresAt, new Date())) {
     return "Active"

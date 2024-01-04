@@ -54,8 +54,6 @@ stripeRouter.post("/job-listing-order-complete", async (req, res) => {
     return
   }
 
-  console.log(jobListing.expiresAt)
-
   const startingDate =
     jobListing.expiresAt == null || isBefore(jobListing.expiresAt, new Date())
       ? new Date()

@@ -26,7 +26,6 @@ export function MyJobListingsPage() {
       <Suspense fallback={<JobListingSkeletonGrid amount={6} />}>
         <Await resolve={jobListingsPromise}>
           {(jobListings) => {
-            console.log("jobListings", jobListings)
             return <MyJobListingGrid jobListings={jobListings} />
           }}
         </Await>
