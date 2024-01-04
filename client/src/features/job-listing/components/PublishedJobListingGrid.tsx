@@ -21,22 +21,19 @@ const PublishedJobListingGrid = ({
 }: {
   jobListing: JobListing[]
 }) => {
-  const [hideJobIds, setHideJobIds] = useLocalStorage(
-    "hideIDs",
-    JSON.stringify([])
-  )
+  const [hideJobIds, setHideJobIds] = useLocalStorage<string[]>("hideIDs", [])
 
   //   const [filterParams, setFilterParams] = useState<JobListingFilter>({})
 
   const visibleJobListing = jobListing.filter((job) => {
-    return !JSON.parse(hideJobIds).includes(job.id)
+    return !hideJobIds.includes(job.id)
   })
 
   const { toast } = useToast()
 
   function handleJobHidden(id: string, jobTitle: string) {
     setHideJobIds((prevIds) => {
-      return JSON.stringify([...JSON.parse(prevIds), id])
+      return [...prevIds, id]
     })
     toast({
       title: "Job hidden",
@@ -45,9 +42,7 @@ const PublishedJobListingGrid = ({
         <ToastAction
           onClick={() => {
             setHideJobIds((prevIds) => {
-              return JSON.stringify(
-                [...JSON.parse(prevIds)].filter((jobId) => jobId != id)
-              )
+              return [...prevIds].filter((jobId) => jobId != id)
             })
           }}
           altText="Undo"

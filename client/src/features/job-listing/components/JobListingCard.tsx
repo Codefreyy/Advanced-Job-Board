@@ -27,7 +27,13 @@ const JobListingCard = ({
   footerBtns,
 }: JobListingCardProps) => {
   return (
-    <Card className={cn("h-full flex flex-col", className)} key={job.id}>
+    <Card
+      className={cn(
+        "h-full flex flex-col cursor-pointer hover:scale-[1.02] hover:border-slate-400 border-slate-300 dark:border-slate-700 dark:hover:border-slate-400",
+        className
+      )}
+      key={job.id}
+    >
       <CardHeader>
         <div className="flex gap-4 justify-between">
           <div>
