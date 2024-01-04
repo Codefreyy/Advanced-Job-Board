@@ -3,7 +3,7 @@ import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { cn } from "@/utils/shadcnUtils"
-import { EyeOffIcon, Heart, HeartCrack } from "lucide-react"
+import { EyeIcon, EyeOffIcon, Heart, HeartCrack } from "lucide-react"
 import { JobListing } from "../constants/types"
 import JobListingCard from "./JobListingCard"
 import JobListingDetailDialog from "./JobListingDetailDialog"
@@ -33,16 +33,22 @@ const PublishedJobListingGrid = ({
 
   //   const [filterParams, setFilterParams] = useState<JobListingFilter>({})
 
-  const visibleJobListing = jobListing.filter((job) => {
-    return !hideJobIds.includes(job.id)
-  })
+  //   const visibleJobListing = jobListing.filter((job) => {
+  //     return !hideJobIds.includes(job.id)
+  //   })
 
   const { toast } = useToast()
 
-  function handleJobHidden(id: string, jobTitle: string) {
+  function handleJobHiddenChange(id: string, jobTitle: string) {
     setHideJobIds((prevIds) => {
+      if (prevIds.includes(id)) {
+        return prevIds.filter((jobId) => jobId !== id)
+      }
       return [...prevIds, id]
     })
+
+    if (!hideJobIds.includes(id)) return
+
     toast({
       title: "Job hidden",
       description: `${jobTitle} will no longer be shown`,
@@ -53,7 +59,8 @@ const PublishedJobListingGrid = ({
               return [...prevIds].filter((jobId) => jobId != id)
             })
           }}
-          altText="Undo"
+          altText="Click show hidden in the filter section to show hidden jobs 
+          and then click the show button in the card to show the job again "
         >
           Undo
         </ToastAction>
@@ -70,20 +77,21 @@ const PublishedJobListingGrid = ({
     })
   }
 
-  if (!visibleJobListing || !visibleJobListing.length) {
+  if (!jobListing || !jobListing.length) {
     return <div className="text-slate-400">There is no jobs visible now.</div>
   }
 
   return (
     <>
       <JobListingGrid>
-        {visibleJobListing?.map((job) => (
+        {jobListing?.map((job) => (
           <PublishedJobCard
             jobListing={job}
             key={job.id}
-            onHideJobChange={handleJobHidden}
+            onHideJobChange={handleJobHiddenChange}
             onFavoriteJobChange={handleFavoriteJobChange}
             isFavorite={favoriteJobIds.includes(job.id)}
+            isHidden={hideJobIds.includes(job.id)}
           />
         ))}
       </JobListingGrid>
@@ -96,6 +104,7 @@ type PublishedJobCardProps = {
   onHideJobChange: (jobId: string, jobTitle: string) => void
   onFavoriteJobChange: (jobId: string) => void
   isFavorite: boolean
+  isHidden: boolean
 }
 
 function PublishedJobCard({
@@ -103,9 +112,11 @@ function PublishedJobCard({
   onHideJobChange,
   onFavoriteJobChange,
   isFavorite,
+  isHidden,
 }: PublishedJobCardProps) {
   return (
     <JobListingCard
+      className={isHidden ? "opacity-50" : undefined}
       headerDetails={
         <div className="flex -mr-3 -mt-3">
           <Button
@@ -114,8 +125,12 @@ function PublishedJobCard({
             className="rounded-full"
             onClick={() => onHideJobChange(jobListing.id, jobListing.title)}
           >
-            <EyeOffIcon className="w-4 h-4 " />
-            <div className="sr-only">Hide</div>
+            {isHidden ? (
+              <EyeOffIcon className="w-4 h-4 " />
+            ) : (
+              <EyeIcon className="W-4 h-4" />
+            )}
+            <div className="sr-only">{isHidden ? "Hidden" : "Not hidden"}</div>
           </Button>
 
           <Button
@@ -130,7 +145,9 @@ function PublishedJobCard({
                 isFavorite && "fill-red-500 stroke-red-500"
               )}
             />
-            <div className="sr-only">Favorite</div>
+            <div className="sr-only">
+              {isFavorite ? "Favorite" : "Not Favorite"}
+            </div>
           </Button>
         </div>
       }
