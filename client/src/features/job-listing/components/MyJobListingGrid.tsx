@@ -75,6 +75,15 @@ const MyJobListingGrid = ({ jobListings }: MyJobListingGridProps) => {
       })
     }
   }
+
+  if (!visibleJobListing || !visibleJobListing.length) {
+    return (
+      <div className="text-slate-400">
+        You haven't created any job listing now.
+      </div>
+    )
+  }
+
   return (
     <>
       {isDeleting && (
@@ -82,6 +91,7 @@ const MyJobListingGrid = ({ jobListings }: MyJobListingGridProps) => {
           <LoadingSpinner /> <span className="text-slate-300">Deleting...</span>
         </div>
       )}
+
       <JobListingGrid>
         {visibleJobListing.map((job) => (
           <MyJobListingCard

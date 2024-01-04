@@ -1,3 +1,5 @@
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { EyeOffIcon, Heart } from "lucide-react"
 import { JobListing } from "../constants/types"
@@ -19,9 +21,29 @@ const PublishedJobListingGrid = ({
     return !JSON.parse(hideJobIds).includes(job.id)
   })
 
-  function handleJobHidden(id: string) {
+  const { toast } = useToast()
+
+  function handleJobHidden(id: string, jobTitle: string) {
     setHideJobIds((prevIds) => {
       return JSON.stringify([...JSON.parse(prevIds), id])
+    })
+    toast({
+      title: "Job hidden",
+      description: `${jobTitle} will no longer be shown`,
+      action: (
+        <ToastAction
+          onClick={() => {
+            setHideJobIds((prevIds) => {
+              return JSON.stringify(
+                [...JSON.parse(prevIds)].filter((jobId) => jobId != id)
+              )
+            })
+          }}
+          altText="Undo"
+        >
+          Undo
+        </ToastAction>
+      ),
     })
   }
 
@@ -55,7 +77,7 @@ function PublishedJobCard({
         <div className="flex gap-4">
           <EyeOffIcon
             className="w-5 h-5 cursor-pointer"
-            onClick={() => onHideJobChange(jobListing.id)}
+            onClick={() => onHideJobChange(jobListing.id, jobListing.title)}
           />
           <Heart className="w-5 h-5 cursor-pointer" />
         </div>
