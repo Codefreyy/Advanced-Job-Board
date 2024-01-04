@@ -25,6 +25,10 @@ const PublishedJobListingGrid = ({
     })
   }
 
+  if (!visibleJobListing || !visibleJobListing.length) {
+    return <div className="text-slate-400">There is no jobs visible now.</div>
+  }
+
   return (
     <JobListingGrid>
       {visibleJobListing?.map((job) => (
