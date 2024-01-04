@@ -41,8 +41,8 @@ const JobListingCard = ({
               {job.title}
             </CardTitle>
             <CardDescription className="flex flex-col">
-              <div>{job.companyName}</div>
-              <div>{job.location}</div>
+              <span>{job.companyName}</span>
+              <span>{job.location}</span>
             </CardDescription>
           </div>
           {headerDetails}

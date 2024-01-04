@@ -17,26 +17,19 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Control, FieldValues, Path, PathValue, useForm } from "react-hook-form"
 import { z } from "zod"
-
-const JOB_LISTING_TYPES = [
-  "Full Time",
-  "Part Time",
-  "Internship",
-  "Any",
-] as const
-const JOB_LISTING_EXPERIENCE_LEVELS = [
-  "Junior",
-  "Mid-Level",
-  "Senior",
-  "Any",
-] as const
+import {
+  JOB_LISTING_EXPERIENCE_LEVELS,
+  JOB_LISTING_TYPES,
+} from "../constants/schema"
 
 const jobListingFilterFormSchema = z.object({
   title: z.string(),
   location: z.string(),
-  type: z.enum(JOB_LISTING_TYPES),
-  salary: z.number(),
-  experienceLevel: z.enum(JOB_LISTING_EXPERIENCE_LEVELS),
+  type: z.enum(JOB_LISTING_TYPES).or(z.literal("")),
+  minimumSalary: z.number(),
+  experienceLevel: z.enum(JOB_LISTING_EXPERIENCE_LEVELS).or(z.literal("")),
+  showHidden: z.boolean(),
+  onlyShowFavorites: z.boolean(),
 })
 
 type JobListingFilterValues = z.infer<typeof jobListingFilterFormSchema>
@@ -44,9 +37,11 @@ type JobListingFilterValues = z.infer<typeof jobListingFilterFormSchema>
 const DEFAULT_VALUES: JobListingFilterValues = {
   title: "",
   location: "",
-  type: "Any",
-  salary: 0,
-  experienceLevel: "Any",
+  type: "",
+  minimumSalary: 0,
+  experienceLevel: "",
+  showHidden: false,
+  onlyShowFavorites: false,
 }
 
 type JobListingFilterFormProps = {
@@ -61,6 +56,7 @@ function JobListingFilterForm({
   const form = useForm<JobListingFilterValues>({
     resolver: zodResolver(jobListingFilterFormSchema),
     defaultValues: initialFilter,
+    mode: "onChange",
   })
 
   return (
@@ -93,12 +89,17 @@ function JobListingFilterForm({
           />
           <FormField
             control={form.control}
-            name="salary"
+            name="minimumSalary"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Salary</FormLabel>
+                <FormLabel>Minimum Salary</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input
+                    type="number"
+                    {...field}
+                    min={0}
+                    value={isNaN(field.value) ? "" : field.value}
+                  />
                 </FormControl>
               </FormItem>
             )}
