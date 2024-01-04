@@ -69,7 +69,7 @@ function PublishedJobCard({
   onHideJobChange,
 }: {
   jobListing: JobListing
-  onHideJobChange: (jobId: string) => void
+  onHideJobChange: (jobId: string, jobTitle: string) => void
 }) {
   return (
     <JobListingCard
