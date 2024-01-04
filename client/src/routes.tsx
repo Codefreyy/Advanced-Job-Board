@@ -6,6 +6,7 @@ import { TaskListPage } from "@/pages/tasks/TaskListPage"
 import { Navigate, RouteObject } from "react-router-dom"
 import { AuthLayout, LoginForm, SignupForm } from "./features/authentication"
 import { editJobListingRoute } from "./pages/jobs/edit"
+import { jobsIndexRoutes } from "./pages/jobs/listings"
 import { myJobListingsRoute } from "./pages/jobs/my-listings"
 import { NewJobListingPage } from "./pages/jobs/new/NewJobListingPage"
 import { orderCompleteRoute } from "./pages/jobs/order-complete"
@@ -32,6 +33,7 @@ export const routes: RouteObject[] = [
           {
             path: "jobs",
             children: [
+              { index: true, ...jobsIndexRoutes },
               { path: "my-listings", ...myJobListingsRoute },
               {
                 path: "new",

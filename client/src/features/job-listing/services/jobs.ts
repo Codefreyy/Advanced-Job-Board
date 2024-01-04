@@ -13,12 +13,13 @@ export function getAllMyListings() {
     return baseApi.get('/job-listings/my-listings').then(res => z.array(jobListingSchema).parseAsync(res.data))
 }
 
+
 /**
  * GET /job-listings/published
  * This route will return all the published job listings. This is useful for getting the job listings to display on the job board.
  */
 export function getPublishedListings() {
-    return baseApi.get('job-listings/published').then(res => res.data)
+    return baseApi.get('job-listings/published').then(res => z.array(jobListingSchema).parseAsync(res.data))
 }
 
 /**

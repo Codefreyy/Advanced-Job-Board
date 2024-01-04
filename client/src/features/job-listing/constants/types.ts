@@ -1,4 +1,4 @@
 import { z } from "zod";
-import { jobListingFormSchema } from "./schema";
+import { jobListingSchema } from "./schema";
 
-export type JobListing = z.infer<typeof jobListingFormSchema>
+export type JobListing = z.infer<typeof jobListingSchema>

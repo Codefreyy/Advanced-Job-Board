@@ -1,13 +1,3 @@
-import { Button } from "@/components/ui/button"
-import {
-  deleteListing,
-  createPublishPaymentIntent,
-} from "@/features/job-listing/services/jobs"
-import { useMemo, useState } from "react"
-import { Link } from "react-router-dom"
-import { JobListing } from "../constants/types"
-import JobListingCard from "./JobListingCard"
-import JobListingGrid from "./JobListingGrid"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,29 +8,39 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { useToast } from "@/components/ui/use-toast"
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
-import { JOB_LISTING_DURATIONS } from "../../../../../api/src/constants/types"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { formatCurrency } from "@/utils/formatters"
-import { getJobListingPriceInCents } from "../../../../../api/src/utils/getJobListingPriceInCents"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { differenceInDays, formatDistanceStrict, isAfter } from "date-fns"
-import { Badge } from "@/components/ui/badge"
-import { Elements } from "@stripe/react-stripe-js"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
+import { useToast } from "@/components/ui/use-toast"
+import {
+  createPublishPaymentIntent,
+  deleteListing,
+} from "@/features/job-listing/services/jobs"
 import { stripePromise } from "@/lib/stripe"
+import { formatCurrency } from "@/utils/formatters"
+import { Elements } from "@stripe/react-stripe-js"
+import { differenceInDays, formatDistanceStrict, isAfter } from "date-fns"
+import { useMemo, useState } from "react"
+import { Link } from "react-router-dom"
+import { JOB_LISTING_DURATIONS } from "../../../../../api/src/constants/types"
+import { getJobListingPriceInCents } from "../../../../../api/src/utils/getJobListingPriceInCents"
 import { useTheme } from "../../../hooks/useTheme"
+import { JobListing } from "../constants/types"
 import { CheckoutForm } from "./CheckoutForm"
+import JobListingCard from "./JobListingCard"
+import JobListingGrid from "./JobListingGrid"
 
 type MyJobListingGridProps = {
   jobListings: JobListing[]
@@ -109,6 +109,7 @@ function MyJobListingCard({
   const status = getJobListingStatus(jobListing.expiresAt)
   const [clientSecret, setClientSecret] = useState<string>()
   const { isDark } = useTheme()
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false)
 
   return (
     <JobListingCard
@@ -146,19 +147,23 @@ function MyJobListingCard({
               <DialogDescription>
                 This is a non-refundable purchase.
               </DialogDescription>
-              {clientSecret && selectedDuration != null && (
-                <Elements
-                  options={{
-                    clientSecret,
-                    appearance: { theme: isDark ? "night" : "stripe" },
-                  }}
-                  stripe={stripePromise}
-                >
-                  <CheckoutForm
-                    amount={getJobListingPriceInCents(selectedDuration) / 100}
-                  />
-                </Elements>
-              )}
+              {clientSecret &&
+                selectedDuration != null &&
+                (isPaymentLoading ? (
+                  "loading"
+                ) : (
+                  <Elements
+                    options={{
+                      clientSecret,
+                      appearance: { theme: isDark ? "night" : "stripe" },
+                    }}
+                    stripe={stripePromise}
+                  >
+                    <CheckoutForm
+                      amount={getJobListingPriceInCents(selectedDuration) / 100}
+                    />
+                  </Elements>
+                ))}
             </DialogContent>
           </Dialog>
           <DropdownMenu>
@@ -171,11 +176,13 @@ function MyJobListingCard({
                   className="cursor-pointer"
                   onClick={async () => {
                     setSelectedDuration(duration)
+                    setIsPaymentLoading(true)
                     const { clientSecret } = await createPublishPaymentIntent(
                       jobListing.id,
                       duration
                     )
                     setClientSecret(clientSecret)
+                    setIsPaymentLoading(false)
                   }}
                 >
                   {duration} Days -{" "}
