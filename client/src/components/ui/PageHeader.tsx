@@ -12,7 +12,7 @@ export function PageHeader({
   return (
     <>
       <h1
-        className={`text-5xl flex justify-between items-center gap-8 font-bold ${
+        className={`text-3xl flex justify-between items-center gap-8 font-bold ${
           subtitle ? "mb-4" : "mb-8"
         }`}
       >

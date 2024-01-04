@@ -71,8 +71,8 @@ const Navbar = () => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link to="/jobs/my-listings" className="cursor-pointer">
-                My Listings
+              <Link to="/jobs" className="cursor-pointer">
+                Job Listings
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

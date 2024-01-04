@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
@@ -86,12 +87,21 @@ function PublishedJobCard({
   return (
     <JobListingCard
       headerDetails={
-        <div className="flex gap-4">
-          <EyeOffIcon
-            className="w-5 h-5 cursor-pointer"
+        <div className="flex -mr-3 -mt-3">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="rounded-full"
             onClick={() => onHideJobChange(jobListing.id, jobListing.title)}
-          />
-          <Heart className="w-5 h-5 cursor-pointer" />
+          >
+            <EyeOffIcon className="w-4 h-4 " />
+            <div className="sr-only">Hide</div>
+          </Button>
+
+          <Button size="icon" variant="ghost" className="rounded-full">
+            <Heart className="w-4 h-4 " />
+            <div className="sr-only">Favorite</div>
+          </Button>
         </div>
       }
       job={jobListing}
