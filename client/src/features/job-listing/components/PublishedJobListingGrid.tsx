@@ -7,6 +7,14 @@ import JobListingCard from "./JobListingCard"
 import JobListingDetailDialog from "./JobListingDetailDialog"
 import JobListingGrid from "./JobListingGrid"
 
+// type jobListingFilter = {
+//   title: string
+//   location: string
+//   type: string
+//   salary: number
+//   experienceLevel: (typeof JOB_LISTING_EXPERIENCE_LEVELS)[number]
+// }
+
 const PublishedJobListingGrid = ({
   jobListing,
 }: {
@@ -16,6 +24,8 @@ const PublishedJobListingGrid = ({
     "hideIDs",
     JSON.stringify([])
   )
+
+  //   const [filterParams, setFilterParams] = useState<JobListingFilter>({})
 
   const visibleJobListing = jobListing.filter((job) => {
     return !JSON.parse(hideJobIds).includes(job.id)
@@ -52,15 +62,17 @@ const PublishedJobListingGrid = ({
   }
 
   return (
-    <JobListingGrid>
-      {visibleJobListing?.map((job) => (
-        <PublishedJobCard
-          jobListing={job}
-          key={job.id}
-          onHideJobChange={handleJobHidden}
-        />
-      ))}
-    </JobListingGrid>
+    <>
+      <JobListingGrid>
+        {visibleJobListing?.map((job) => (
+          <PublishedJobCard
+            jobListing={job}
+            key={job.id}
+            onHideJobChange={handleJobHidden}
+          />
+        ))}
+      </JobListingGrid>
+    </>
   )
 }
 

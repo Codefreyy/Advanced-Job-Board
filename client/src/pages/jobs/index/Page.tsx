@@ -6,7 +6,7 @@ import {
 } from "@/features/job-listing"
 import { Await, useDeferredLoaderData } from "@/lib/reactRouter"
 import { Suspense } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { loader } from "./Loader"
 
 export function JobListings() {

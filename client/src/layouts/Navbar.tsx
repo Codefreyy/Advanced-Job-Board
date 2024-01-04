@@ -9,7 +9,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ChevronDown, Menu, Moon, Sun } from "lucide-react"
+import { Archive, ChevronDown, Menu, Moon, Sun } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { useTheme } from "../hooks/useTheme"
@@ -21,11 +21,14 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner"
 const Navbar = () => {
   const { logout, user, isLoadingUser } = useAuth()
   return (
-    <nav className="sticky top-0 z-10 flex p-4 gap-3 justify-between items-center border-b border-slate-200 dark:bg-slate-950 bg-white ">
-      <h2 className="text-lg">WDS App</h2>
-      <section className="flex gap-4 items-center px-4 ">
+    <nav className="sticky top-0 z-10 flex p-4 gap-5 justify-between items-center border-b border-slate-200 dark:bg-slate-950 bg-white ">
+      <h2 className="text-lg flex items-center gap-3 px-5">
+        <Archive className="w-5 h-5" />
+        Job Planet
+      </h2>
+      <section className="flex gap-3 items-center px-4 ">
         <ThemeToggleButton />
-        <div className="hidden sm:flex">
+        <div className="hidden md:flex">
           <NavItem label="Task Board" to="/tasks" />
           <NavItem label="Job Listings" to="/jobs" />
           {user ? (
@@ -52,13 +55,13 @@ const Navbar = () => {
           )}
         </div>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild className="flex sm:hidden">
+          <DropdownMenuTrigger asChild className="flex md:hidden">
             <Button
               variant="ghost"
               size="icon"
               className="data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800"
             >
-              <Menu className="w-4 h-4" />
+              <Menu className="w-5 h-5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
