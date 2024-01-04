@@ -3,19 +3,12 @@ import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { cn } from "@/utils/shadcnUtils"
-import { EyeIcon, EyeOffIcon, Heart, HeartCrack } from "lucide-react"
+import { EyeIcon, EyeOffIcon, Heart } from "lucide-react"
 import { JobListing } from "../constants/types"
 import JobListingCard from "./JobListingCard"
 import JobListingDetailDialog from "./JobListingDetailDialog"
+import JobListingFilterForm from "./JobListingFilterForm"
 import JobListingGrid from "./JobListingGrid"
-
-// type jobListingFilter = {
-//   title: string
-//   location: string
-//   type: string
-//   salary: number
-//   experienceLevel: (typeof JOB_LISTING_EXPERIENCE_LEVELS)[number]
-// }
 
 const PublishedJobListingGrid = ({
   jobListing,
@@ -81,8 +74,11 @@ const PublishedJobListingGrid = ({
     return <div className="text-slate-400">There is no jobs visible now.</div>
   }
 
+  function handleFilter() {}
+
   return (
     <>
+      <JobListingFilterForm onSubmit={handleFilter} />
       <JobListingGrid>
         {jobListing?.map((job) => (
           <PublishedJobCard
