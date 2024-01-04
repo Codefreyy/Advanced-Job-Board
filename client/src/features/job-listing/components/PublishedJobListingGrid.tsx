@@ -40,7 +40,7 @@ const PublishedJobListingGrid = ({
       return [...prevIds, id]
     })
 
-    if (!hideJobIds.includes(id)) return
+    if (hideJobIds.includes(id)) return
 
     toast({
       title: "Job hidden",
@@ -74,11 +74,9 @@ const PublishedJobListingGrid = ({
     return <div className="text-slate-400">There is no jobs visible now.</div>
   }
 
-  function handleFilter() {}
-
   return (
     <>
-      <JobListingFilterForm onSubmit={handleFilter} />
+      <JobListingFilterForm onSubmit={(values) => console.log(values)} />
       <JobListingGrid>
         {jobListing?.map((job) => (
           <PublishedJobCard
