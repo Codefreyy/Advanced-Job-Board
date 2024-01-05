@@ -1,13 +1,13 @@
-import { PageHeader } from "@/components/ui/PageHeader"
 import { Button } from "@/components/ui/button"
-import { Link } from "react-router-dom"
-import { loader } from "./loader"
-import { Await, useDeferredLoaderData } from "@/lib/reactRouter"
-import { Suspense } from "react"
+import { PageHeader } from "@/components/ui/PageHeader"
 import {
   JobListingSkeletonGrid,
   MyJobListingGrid,
 } from "@/features/job-listing"
+import { Await, useDeferredLoaderData } from "@/lib/reactRouter"
+import { Suspense } from "react"
+import { Link } from "react-router-dom"
+import { loader } from "./loader"
 
 export function MyJobListingsPage() {
   const { jobListingsPromise } = useDeferredLoaderData<typeof loader>()

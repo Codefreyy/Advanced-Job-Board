@@ -20,7 +20,7 @@ export function NewJobListingPage() {
       <JobListingForm
         onSubmit={async (values) => {
           await createNewJobListing(values)
-          navigate("/jobs/my-listings")
+          navigate("/jobs")
         }}
       />
     </>

@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -14,54 +16,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Control, FieldValues, Path, PathValue, useForm } from "react-hook-form"
-import { z } from "zod"
+import {
+  Control,
+  FieldValues,
+  Path,
+  PathValue,
+  UseFormReturn,
+} from "react-hook-form"
+
 import {
   JOB_LISTING_EXPERIENCE_LEVELS,
   JOB_LISTING_TYPES,
 } from "../constants/schema"
-
-const jobListingFilterFormSchema = z.object({
-  title: z.string(),
-  location: z.string(),
-  type: z.enum(JOB_LISTING_TYPES).or(z.literal("")),
-  minimumSalary: z.number(),
-  experienceLevel: z.enum(JOB_LISTING_EXPERIENCE_LEVELS).or(z.literal("")),
-  showHidden: z.boolean(),
-  onlyShowFavorites: z.boolean(),
-})
-
-type JobListingFilterValues = z.infer<typeof jobListingFilterFormSchema>
-
-const DEFAULT_VALUES: JobListingFilterValues = {
-  title: "",
-  location: "",
-  type: "",
-  minimumSalary: 0,
-  experienceLevel: "",
-  showHidden: false,
-  onlyShowFavorites: false,
-}
-
-type JobListingFilterFormProps = {
-  onSubmit: (jobFilters: JobListingFilterValues) => void
-  initialFilter?: JobListingFilterValues
-}
+import { JobListingFilterValues } from "../hooks/useJobListingFilterForm"
 
 function JobListingFilterForm({
-  onSubmit,
-  initialFilter = DEFAULT_VALUES,
-}: JobListingFilterFormProps) {
-  const form = useForm<JobListingFilterValues>({
-    resolver: zodResolver(jobListingFilterFormSchema),
-    defaultValues: initialFilter,
-    mode: "onChange",
-  })
-
+  form,
+}: {
+  form: UseFormReturn<JobListingFilterValues>
+}) {
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-10">
           <FormField
             control={form.control}
@@ -99,6 +75,7 @@ function JobListingFilterForm({
                     {...field}
                     min={0}
                     value={isNaN(field.value) ? "" : field.value}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
                   />
                 </FormControl>
               </FormItem>
@@ -107,7 +84,7 @@ function JobListingFilterForm({
           <JobSelectFormField
             control={form.control}
             name="type"
-            label="Type"
+            label="Job Type"
             options={JOB_LISTING_TYPES}
           />
           <JobSelectFormField
@@ -116,6 +93,50 @@ function JobListingFilterForm({
             label="Experience Level"
             options={JOB_LISTING_EXPERIENCE_LEVELS}
           />
+
+          <div className="flex items-end justify-between">
+            <div className="flex  flex-col justify-end gap-4">
+              <FormField
+                control={form.control}
+                name="showHidden"
+                render={({ field }) => (
+                  <FormItem className="flex gap-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(
+                            checked === "indeterminate" ? false : checked
+                          )
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel>Show Hidden</FormLabel>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="onlyShowFavorites"
+                render={({ field }) => (
+                  <FormItem className="flex gap-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(
+                            checked === "indeterminate" ? false : checked
+                          )
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel>Only Show Favorites</FormLabel>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button onClick={() => form.reset()}>Reset</Button>
+          </div>
         </div>
       </form>
     </Form>
@@ -146,7 +167,7 @@ function JobSelectFormField<T extends FieldValues>({
             onValueChange={(val) =>
               field.onChange(val as PathValue<T, Path<T>>)
             }
-            defaultValue={field.value}
+            value={field.value}
           >
             <FormControl>
               <SelectTrigger>
@@ -155,6 +176,7 @@ function JobSelectFormField<T extends FieldValues>({
             </FormControl>
             <SelectContent>
               <SelectGroup>
+                <SelectItem value="">Any</SelectItem>
                 {options.map((option) => (
                   <SelectItem key={option} value={option}>
                     {option}

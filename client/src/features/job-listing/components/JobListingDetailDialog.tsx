@@ -37,8 +37,8 @@ const JobListingDetailDialog = ({ job }: JobListingDetailDialogProps) => {
                 {job.title}
               </DialogTitle>
               <DialogDescription className="flex flex-col">
-                <div>{job.companyName}</div>
-                <div>{job.location}</div>
+                <span>{job.companyName}</span>
+                <span>{job.location}</span>
               </DialogDescription>
             </div>
           </div>
