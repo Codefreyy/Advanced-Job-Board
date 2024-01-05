@@ -43,6 +43,11 @@ const Navbar = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <Link to="jobs/my-listings" className="cursor-pointer">
+                    My Job Listings
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={logout}>
                   <span className="cursor-pointer">Logout</span>
                 </DropdownMenuItem>
@@ -83,6 +88,11 @@ const Navbar = () => {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
+                    <DropdownMenuItem>
+                      <Link className="cursor-pointer" to="/jobs/my-listings">
+                        My Job Listings
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={logout}>
                       <span className="cursor-pointer">Logout</span>
                     </DropdownMenuItem>
