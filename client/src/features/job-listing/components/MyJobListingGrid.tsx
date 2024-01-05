@@ -139,7 +139,7 @@ function MyJobListingCard({
           <DeleteJobListingDialog
             deleteListing={() => deleteJobListing(jobListing.id)}
           />
-          <Button variant="outline">
+          <Button variant="outline" asChild>
             <Link to={`/jobs/${jobListing.id}/edit`}>Edit</Link>
           </Button>
           <Dialog
@@ -194,6 +194,7 @@ function MyJobListingCard({
                     setClientSecret(clientSecret)
                     setIsPaymentLoading(false)
                   }}
+                  key={duration}
                 >
                   {duration} Days -{" "}
                   {formatCurrency(getJobListingPriceInCents(duration) / 100)}
@@ -214,7 +215,7 @@ const DeleteJobListingDialog = ({
 }) => {
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger asChild>
         <Button variant="ghost">Delete</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

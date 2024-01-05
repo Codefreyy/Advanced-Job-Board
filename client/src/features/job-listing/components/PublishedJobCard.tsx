@@ -20,6 +20,11 @@ function PublishedJobCard({
   isFavorite,
   isHidden,
 }: PublishedJobCardProps) {
+  const hiddenIcon = isHidden ? (
+    <EyeOffIcon className="w-4 h-4" />
+  ) : (
+    <EyeIcon className="w-4 h-4" />
+  )
   return (
     <JobListingCard
       className={isHidden ? "opacity-50" : undefined}
@@ -31,11 +36,7 @@ function PublishedJobCard({
             className="rounded-full"
             onClick={() => onHideJobChange(jobListing.id, jobListing.title)}
           >
-            {isHidden ? (
-              <EyeOffIcon className="w-4 h-4 " />
-            ) : (
-              <EyeIcon className="W-4 h-4" />
-            )}
+            {hiddenIcon}
             <div className="sr-only">{isHidden ? "Hidden" : "Not hidden"}</div>
           </Button>
 
